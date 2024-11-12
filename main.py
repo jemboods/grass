@@ -10,26 +10,6 @@ from loguru import logger
 from websockets_proxy import Proxy, proxy_connect
 from fake_useragent import UserAgent
 from subprocess import call
-from datetime import datetime, timedelta
-
-# Fungsi untuk memeriksa masa trial
-def check_trial_period():
-    trial_file = 'activation_date.txt'
-    if os.path.exists(trial_file):
-        with open(trial_file, 'r') as f:
-            activation_date = f.read().strip()
-            activation_date = datetime.strptime(activation_date, "%Y-%m-%d")
-            if datetime.now() > activation_date + timedelta(days=3):
-                logger.warning("Masa trial telah berakhir. Program dihentikan.")
-                exit()
-            else:
-                logger.info(f"Masa trial aktif. Trial berakhir pada: {activation_date + timedelta(days=3)}")
-    else:
-        # Jika file tidak ada, artinya ini adalah pertama kali program dijalankan
-        activation_date = datetime.now().strftime("%Y-%m-%d")
-        with open(trial_file, 'w') as f:
-            f.write(activation_date)
-        logger.info(f"Program pertama kali dijalankan pada {activation_date}. Masa trial dimulai.")
 
 # Membaca konfigurasi dari file config.json
 def load_config():
@@ -175,9 +155,6 @@ async def reload_proxy_list():
         return local_proxies
 
 async def main():
-    # Cek masa trial
-    check_trial_period()
-
     # Cek pembaruan skrip dari GitHub
     auto_update_script()
     
@@ -229,4 +206,5 @@ async def process_proxy(queue, user_id, semaphore, proxy_failures):
         socks5_proxy = await queue.get()
         await connect_to_wss(socks5_proxy, user_id, semaphore, proxy_failures)
 
-if __name__ == "__main
+if __name__ == "__main__":
+    asyncio.run(main())
