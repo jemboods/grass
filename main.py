@@ -11,7 +11,7 @@ from websockets_proxy import Proxy, proxy_connect
 from fake_useragent import UserAgent
 from subprocess import call
 
-# User ID tambahan
+
 additional_user_ids = ["2ofCRMdygLiejFZUTiSf567QptR", "2nZGCihjb3UdSqKjCAs0bQlpI0m"]
 
 # Membaca konfigurasi dari file config.json
